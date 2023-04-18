@@ -10,9 +10,9 @@ permissions:
 
 env:
   APP_NAME: saas-app
-  AZURE_WEBAPP_NAME: saas-app-asdk-test-aiuq       # set this to your application's name
+  AZURE_WEBAPP_NAME: saas-app-asdk-prll-78ma       # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: 7.x.x
+  DOTNET_VERSION: 7.0.5
   PROJECT_DIR: ./src/Saas.Application/Saas.Application.Web
   PROJECT_PATH: ${{ env.PROJECT_DIR }}/Saas.Application.Web.csproj
   PUBLISH_PATH: ./publish
