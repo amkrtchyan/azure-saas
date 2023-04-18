@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: 'signupadmin-app-asdk-test-aiuq' # set this to your application's name
+  AZURE_WEBAPP_NAME: 'signupadmin-app-asdk-prll-78ma' # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: . # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: 7.x.x
   PROJECT_DIR: ./src/Saas.SignupAdministration/Saas.SignupAdministration.Web
@@ -32,7 +32,7 @@ jobs:
       # checkout the repo specifying the branch name in 'ref:'
       - uses: actions/checkout@v3
         with:
-          ref: main #IMPORTANT we're checking out and deploying the 'main' branch here
+          ref: Develop #IMPORTANT we're checking out and deploying the 'main' branch here
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Setup .NET Core SDK
