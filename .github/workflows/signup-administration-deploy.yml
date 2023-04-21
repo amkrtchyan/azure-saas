@@ -15,7 +15,7 @@ env:
   PROJECT_DIR: ./src/Saas.SignupAdministration/Saas.SignupAdministration.Web
   PROJECT_PATH: ./src/Saas.SignupAdministration/Saas.SignupAdministration.Web/Saas.SignupAdministration.Web.csproj
   OUTPUT_PATH: ./publish/signupadmin
-  BUILD_CONFIGURATION: Release # setting the configuration manager build configuration value for our workflow.
+  BUILD_CONFIGURATION: Debug # setting the configuration manager build configuration value for our workflow.
 
   APP_NAME: signupadmin-app
 jobs:
