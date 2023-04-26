@@ -1,4 +1,4 @@
-namespace Saas.Admin.Service.Data;
+namespace Saas.Admin.Service.Data.Entities;
 
 public class Tenant
 {
@@ -9,6 +9,7 @@ public class Tenant
     public int CategoryId { get; set; }
     public string CreatorEmail { get; set; } = string.Empty;
     public DateTime? CreatedTime { get; set; }
+    public ICollection<TenantSubscription> Subscriptions { get; set; } = new List<TenantSubscription>();
     [Timestamp]
     public byte[]? ConcurrencyToken { get; set; }
 }

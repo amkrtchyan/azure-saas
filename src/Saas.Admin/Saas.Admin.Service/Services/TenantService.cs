@@ -1,5 +1,6 @@
 ﻿using Saas.Admin.Service.Controllers;
 using Saas.Admin.Service.Data;
+using Saas.Admin.Service.Data.Entities;
 using Saas.Permissions.Client;
 
 namespace Saas.Admin.Service.Services;

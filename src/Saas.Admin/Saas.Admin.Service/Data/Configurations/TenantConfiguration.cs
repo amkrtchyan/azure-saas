@@ -1,7 +1,8 @@
-﻿
-namespace Saas.Admin.Service.Data;
+﻿using Saas.Admin.Service.Data.Entities;
 
-public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
+namespace Saas.Admin.Service.Data.Configuration;
+
+public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 {
     public void Configure(EntityTypeBuilder<Tenant> builder)
     {
