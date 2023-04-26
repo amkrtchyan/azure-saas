@@ -7,8 +7,12 @@ public class FeatureConfiguration : IEntityTypeConfiguration<Feature>
     public void Configure(EntityTypeBuilder<Feature> builder)
     {
         builder.HasKey(t => t.Id);
+        builder.ToTable(nameof(Feature) + "s");
 
-        builder.Property(t => t.Name).IsRequired();
+        builder.Property(t => t.Name)
+            .IsRequired()
+            .IsUnicode(false)
+            .HasMaxLength(50);
 
         Seed(builder);
     }

@@ -15,8 +15,7 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 
         builder.Property(t => t.CreatedTime)
             .IsRequired()
-            .HasDefaultValue<DateTime?>(DateTime.UtcNow)
-            .ValueGeneratedOnAdd();
+            .HasDefaultValueSql("GETUTCDATE()");
 
         builder.Property(t => t.ConcurrencyToken)
             .IsConcurrencyToken();

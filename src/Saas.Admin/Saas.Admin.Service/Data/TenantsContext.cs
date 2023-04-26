@@ -11,7 +11,7 @@ public class TenantsContext : DbContext
     }
 
     public DbSet<Tenant> Tenants => Set<Tenant>();
-    public DbSet<Subscription> Subscriptions => Set<Subscription>();
+    public DbSet<Application> Applications => Set<Application>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

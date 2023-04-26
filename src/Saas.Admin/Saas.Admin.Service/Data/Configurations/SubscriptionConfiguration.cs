@@ -7,11 +7,18 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
     public void Configure(EntityTypeBuilder<Subscription> builder)
     {
         builder.HasKey(t => t.Id);
+        builder.ToTable(nameof(Subscription) + "s");
 
-        builder.Property(t => t.Name).IsRequired();
+        builder.Property(t => t.Name)
+            .HasMaxLength(50)
+            .IsUnicode(false)
+            .IsRequired();
+
+        builder.Property(t => t.MonthlyPayment)
+            .HasPrecision(10, 2);
 
         builder.HasMany(e => e.Features)
-            .WithMany()
+            .WithMany(e => e.Subscriptions)
             .UsingEntity("SubscriptionFeatures")
             .HasData(GetSubscriptionFeatures());
 
@@ -30,36 +37,55 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
 
     private static void Seed(EntityTypeBuilder<Subscription> builder)
     {
-        builder.HasData(new List<Subscription>
-        {
-            new Subscription()
+        builder.HasData(
+            new
             {
                 Id = 1,
                 Name = "Trial",
                 MaxUserNumber = 10,
-                Price = 0,
+                MonthlyPayment = 0m,
+                ApplicationId = 1,
             },
-            new Subscription()
+            new
             {
                 Id = 2,
                 Name = "Basic",
                 MaxUserNumber = 10,
-                Price = 100,
+                MonthlyPayment = 100m,
+                ApplicationId = 1,
             },
-            new Subscription()
+            new
             {
                 Id = 3,
                 Name = "Standard",
                 MaxUserNumber = 100,
-                Price = 1000,
+                MonthlyPayment = 1000m,
+                ApplicationId = 1,
             },
-            new Subscription()
+            new
             {
                 Id = 4,
                 Name = "Premium",
                 MaxUserNumber = 10000,
-                Price = 10000,
+                MonthlyPayment = 10000m,
+                ApplicationId = 1,
+            },
+            new
+            {
+                Id = 5,
+                Name = "Trial",
+                MaxUserNumber = 10,
+                MonthlyPayment = 0m,
+                ApplicationId = 2,
+            },
+            new
+            {
+                Id = 6,
+                Name = "Standard",
+                MaxUserNumber = 100,
+                MonthlyPayment = 1000m,
+                ApplicationId = 2,
             }
-        });
+        );
     }
 }
