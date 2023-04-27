@@ -7,5 +7,8 @@ public class TenantSubscriptionConfiguration : IEntityTypeConfiguration<TenantSu
     public void Configure(EntityTypeBuilder<TenantSubscription> builder)
     {
         builder.ToTable(nameof(TenantSubscription) + "s");
+
+        builder.HasOne(e => e.Subscription)
+            .WithMany();
     }
 }

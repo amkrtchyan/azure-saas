@@ -229,13 +229,15 @@ namespace Saas.Admin.Service.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SubscriptionId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SubscriptionId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubscriptionId");
 
                     b.HasIndex("TenantId");
 
@@ -285,11 +287,19 @@ namespace Saas.Admin.Service.Migrations
 
             modelBuilder.Entity("Saas.Admin.Service.Data.Entities.TenantSubscription", b =>
                 {
+                    b.HasOne("Saas.Admin.Service.Data.Entities.Subscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Saas.Admin.Service.Data.Entities.Tenant", null)
                         .WithMany("Subscriptions")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("SubscriptionFeatures", b =>

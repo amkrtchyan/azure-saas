@@ -54,27 +54,6 @@ namespace Saas.Admin.Service.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TenantSubscriptions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SubscriptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TenantSubscriptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TenantSubscriptions_Tenants_TenantId",
-                        column: x => x.TenantId,
-                        principalTable: "Tenants",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Subscriptions",
                 columns: table => new
                 {
@@ -116,6 +95,33 @@ namespace Saas.Admin.Service.Migrations
                         name: "FK_SubscriptionFeatures_Subscriptions_SubscriptionsId",
                         column: x => x.SubscriptionsId,
                         principalTable: "Subscriptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TenantSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubscriptionId = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TenantSubscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TenantSubscriptions_Subscriptions_SubscriptionId",
+                        column: x => x.SubscriptionId,
+                        principalTable: "Subscriptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TenantSubscriptions_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -170,6 +176,11 @@ namespace Saas.Admin.Service.Migrations
                 name: "IX_Subscriptions_ApplicationId",
                 table: "Subscriptions",
                 column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TenantSubscriptions_SubscriptionId",
+                table: "TenantSubscriptions",
+                column: "SubscriptionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TenantSubscriptions_TenantId",
