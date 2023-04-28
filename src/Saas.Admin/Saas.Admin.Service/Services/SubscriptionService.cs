@@ -21,6 +21,15 @@ public class SubscriptionService : ISubscriptionService
         _permissionService = permissionService;
     }
 
+    public async Task<List<SubscriptionDTO>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var a = await _context.Tenants
+            .SelectMany(t => t.Subscriptions)
+            .ToListAsync(cancellationToken);
+
+        return await Task.FromResult(new List<SubscriptionDTO>());
+    }
+
     public async Task<SubscriptionDTO> AddAsync(SubscriptionDTO subscription
         , CancellationToken cancellationToken = default)
     {
@@ -31,18 +40,26 @@ public class SubscriptionService : ISubscriptionService
         return new SubscriptionDTO(entity);
     }
 
-    public Task DeleteAsync(Guid subscriptionId
-        , CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<SubscriptionDTO> GetByIdAsync(Guid subscriptionId
+    public async Task DeleteAsync(int subscriptionId
         , CancellationToken cancellationToken = default)
     {
         var entity = await _context.FindAsync<TenantSubscription>(subscriptionId, cancellationToken);
 
-        return new(entity);
+        if (entity is not null)
+            _context.Remove(entity);
+        
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<SubscriptionDTO> GetByIdAsync(int subscriptionId
+        , CancellationToken cancellationToken = default)
+    {
+        var entity = await _context.FindAsync<TenantSubscription>(subscriptionId, cancellationToken);
+
+        if (entity is not null)
+            return new(entity);
+        else
+            return null;
     }
 
     public Task UpdateAsync(SubscriptionDTO subscription

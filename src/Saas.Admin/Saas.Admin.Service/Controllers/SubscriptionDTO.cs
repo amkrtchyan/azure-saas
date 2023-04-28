@@ -10,6 +10,8 @@ public class SubscriptionDTO
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
 
+    public SubscriptionDTO() { }
+
     public SubscriptionDTO(TenantSubscription subscription)
     {
         Id = subscription.Id;
