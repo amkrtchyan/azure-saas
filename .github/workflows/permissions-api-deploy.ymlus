@@ -16,7 +16,7 @@ env:
   PROJECT_PATH: 
     ./src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1/Saas.Permissions.Service.csproj
   OUTPUT_PATH: ./publish/api-permission
-  BUILD_CONFIGURATION: Release # setting the configuration manager build configuration value for our workflow.
+  BUILD_CONFIGURATION: Debug # setting the configuration manager build configuration value for our workflow.
 
   APP_NAME: permissions-api
 jobs:
