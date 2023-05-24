@@ -1,4 +1,5 @@
-﻿using Saas.Permissions.Service.Exceptions;
+﻿using Microsoft.AspNetCore.Authorization;
+using Saas.Permissions.Service.Exceptions;
 using Saas.Permissions.Service.Interfaces;
 using Saas.Permissions.Service.Models;
 
@@ -18,6 +19,13 @@ public class PermissionsController : ControllerBase
         _permissionsService = permissionsService;
         _graphAPIService = graphAPIService;
         _logger = logger;
+    }
+
+    [HttpGet("/")]
+    [AllowAnonymous]
+    public ActionResult Get()
+    {
+        return Ok();
     }
 
     [HttpGet]
