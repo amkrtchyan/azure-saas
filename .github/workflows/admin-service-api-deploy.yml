@@ -15,7 +15,7 @@ env:
   PROJECT_DIR: ./src/Saas.Admin/Saas.Admin.Service
   PROJECT_PATH: ./src/Saas.Admin/Saas.Admin.Service/Saas.Admin.Service.csproj
   OUTPUT_PATH: ./publish/admin-api
-  BUILD_CONFIGURATION: Release # setting the configuration manager build configuration value for our workflow.
+  BUILD_CONFIGURATION: Debug # setting the configuration manager build configuration value for our workflow.
 
   APP_NAME: admin-api
 jobs:
@@ -32,7 +32,7 @@ jobs:
       # checkout the repo specifying the branch name in 'ref:'
       - uses: actions/checkout@v3
         with:
-          ref: main #IMPORTANT we're checking out and deploying the 'main' branch here
+          ref: Develop #IMPORTANT we're checking out and deploying the 'main' branch here
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Setup .NET Core SDK

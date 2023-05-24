@@ -1,4 +1,4 @@
-﻿using Saas.Admin.Service.Data;
+﻿using Saas.Admin.Service.Data.Entities;
 
 namespace Saas.Admin.Service.Controllers;
 

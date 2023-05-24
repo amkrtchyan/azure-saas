@@ -101,6 +101,8 @@ builder.Services.AddDbContext<TenantsContext>(options =>
     options.UseSqlServer(sqlConnectionString);
 });
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 //Call this as early as possible to make sure DB is ready
@@ -113,6 +115,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHealthChecks("/");
 
 app.UseHttpsRedirection();
 

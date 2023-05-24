@@ -1,7 +1,8 @@
-﻿
-namespace Saas.Admin.Service.Data;
+﻿using Saas.Admin.Service.Data.Entities;
 
-public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
+namespace Saas.Admin.Service.Data.Configuration;
+
+public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 {
     public void Configure(EntityTypeBuilder<Tenant> builder)
     {
@@ -14,8 +15,7 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<Tenant>
 
         builder.Property(t => t.CreatedTime)
             .IsRequired()
-            .HasDefaultValue<DateTime?>(DateTime.UtcNow)
-            .ValueGeneratedOnAdd();
+            .HasDefaultValueSql("GETUTCDATE()");
 
         builder.Property(t => t.ConcurrencyToken)
             .IsConcurrencyToken();
