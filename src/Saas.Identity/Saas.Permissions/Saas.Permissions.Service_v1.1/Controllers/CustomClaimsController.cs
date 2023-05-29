@@ -53,7 +53,7 @@ public class CustomClaimsController : ControllerBase
 
         PermissionsClaimResponse response = new()
         {
-            Permissions = permissionClaims.ToArray()
+            Permissions = permissionClaims.Distinct().ToArray() // TODO remove distinct
         };
 
         return Ok(response);

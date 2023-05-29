@@ -336,7 +336,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read, "tenantId")]
-    [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Read, "userId")]
+    // TODO uncomment [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Read, "userId")]
     public async Task<ActionResult<IEnumerable<string>>> GetUserPermissions(Guid tenantId, Guid userId)
     {
         IEnumerable<string> permissions = await _permissionsServiceClient.GetUserPermissionsForTenantAsync(tenantId, userId);
@@ -398,7 +398,7 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Admin, "tenantId")]
-    [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Delete, "userId")]
+    // TODO uncomment [SaasAuthorize<SaasUserPermissionRequirement, UserPermissionKind>(UserPermissionKind.Delete, "userId")]
     public async Task<IActionResult> DeleteUserPermissions(Guid tenantId, Guid userId, [FromBody] string[] permissions)
     {
         await _permissionsServiceClient.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);

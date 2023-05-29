@@ -29,14 +29,14 @@ public static class SaasPermissionDataExtensions
         }).ToList()
     };
 
-    public static SaasPermission IncludeTenantPermissions(this SaasPermission permission) => new()
-    {
-        UserId = permission.UserId,
-        TenantId = permission.TenantId,
-        TenantPermissions = permission.TenantPermissions.Select(p => new TenantPermission
-        {
-            PermissionStr = p.PermissionStr,
-            TenantId = permission.TenantId
-        }).ToList()
-    };
+    //public static SaasPermission IncludeTenantPermissions(this SaasPermission permission) => new()
+    //{
+    //    UserId = permission.UserId,
+    //    TenantId = permission.TenantId,
+    //    TenantPermissions = permission.TenantPermissions.Select(p => new TenantPermission
+    //    {
+    //        PermissionStr = p.PermissionStr,
+    //        TenantId = permission.TenantId
+    //    }).ToList()
+    //};
 }

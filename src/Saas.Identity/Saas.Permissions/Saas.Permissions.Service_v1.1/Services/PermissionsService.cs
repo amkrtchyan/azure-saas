@@ -150,23 +150,28 @@ public class PermissionsService : IPermissionsService
     {
         _logger.LogDebug("Permissions were requested to be removed for {userId} on {tenantId}", userId, tenantId);
 
-        var removeTenantPermission = await _permissionsContext.SaasPermissions
-            .Include(x => x.TenantPermissions)
+        //var removeTenantPermission = await _permissionsContext.SaasPermissions
+        //    .Include(x => x.TenantPermissions)
+        //    .Where(x => x.TenantId == tenantId && x.UserId == userId)
+        //    .Select(x => x.IncludeTenantPermissions())
+        //    .SelectMany(x => x.TenantPermissions.Where(x => permissions.Contains(x.PermissionStr)))
+        //    .ToListAsync();
+
+        //_permissionsContext.SaasPermissions
+        //    .RemoveRange(removeTenantPermission
+        //        .Select(x => new SaasPermission 
+        //        { 
+        //            TenantId = tenantId,
+        //            UserId = userId,
+        //            TenantPermissions = new[] { x } 
+        //        }));
+
+        //await _permissionsContext.SaveChangesAsync();
+
+        await _permissionsContext.SaasPermissions
             .Where(x => x.TenantId == tenantId && x.UserId == userId)
-            .Select(x => x.IncludeTenantPermissions())
-            .SelectMany(x => x.TenantPermissions.Where(x => permissions.Contains(x.PermissionStr)))
-            .ToListAsync();
-
-        _permissionsContext.SaasPermissions
-            .RemoveRange(removeTenantPermission
-                .Select(x => new SaasPermission 
-                { 
-                    TenantId = tenantId,
-                    UserId = userId,
-                    TenantPermissions = new[] { x } 
-                }));
-
-        await _permissionsContext.SaveChangesAsync();
+            .Where(x => x.TenantPermissions.Any(x => permissions.Contains(x.PermissionStr)))
+            .ExecuteDeleteAsync();
     }
 
     public async Task<ICollection<Guid>> GetTenantsForUserAsync(Guid userId)
