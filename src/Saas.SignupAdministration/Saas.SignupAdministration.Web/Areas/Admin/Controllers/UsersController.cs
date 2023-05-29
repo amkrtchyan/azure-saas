@@ -106,6 +106,11 @@ public class UsersController : Controller
         }
 
         await _adminServiceClient.PermissionsDELETEAsync(tenantid, new Guid(removeUserRequest.UserId), new[] { TenantPermissionKind.Admin.ToString() });
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Index), new
+        {
+            area = "Admin",
+            controller = "users",
+            tenantid = tenantid
+        });
     }
 }
