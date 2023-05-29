@@ -42,4 +42,11 @@
     <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\Users\RemoveFromTenant.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

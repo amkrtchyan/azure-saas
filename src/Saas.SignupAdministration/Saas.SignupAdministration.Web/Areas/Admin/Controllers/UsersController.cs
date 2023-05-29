@@ -1,4 +1,7 @@
-﻿using Saas.Admin.Client;
+﻿using Microsoft.Graph;
+using Saas.Admin.Client;
+using Saas.Identity.Authorization.Model.Kind;
+using Saas.SignupAdministration.Web.Areas.Admin.Data;
 
 namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 
@@ -78,5 +81,31 @@ public class UsersController : Controller
                 });
         }
         return View(addUserRequest);
+    }
+
+    [HttpGet]
+    [Route("RemoveFromTenant", Name = "RemoveFromTenant")]
+    public IActionResult RemoveFromTenant(string tenantId, string userId, string displayname)
+    {
+        return View(new RemoveUserRequest { TenantId = tenantId, UserId = userId, DisplayName = displayname });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Route("RemoveFromTenant")]
+    public async Task<IActionResult> RemoveFromTenant(Guid tenantid, [Bind("TenantId, UserId")] RemoveUserRequest removeUserRequest)
+    {
+        if (string.Compare(tenantid.ToString(), removeUserRequest.TenantId) != 0)
+        {
+            return NotFound();
+        }
+
+        if (!Guid.TryParse(removeUserRequest.TenantId, out var userTenantId))
+        {
+            throw new ArgumentException($"Tenant id value is invalid '{removeUserRequest.TenantId}'. Value must be a guid. ");
+        }
+
+        await _adminServiceClient.PermissionsDELETEAsync(tenantid, new Guid(removeUserRequest.UserId), new[] { TenantPermissionKind.Admin.ToString() });
+        return RedirectToAction(nameof(Index));
     }
 }
