@@ -13,10 +13,13 @@ namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 public class UsersController : Controller
 {
     private readonly IAdminServiceClient _adminServiceClient;
+    private readonly IPayrollClient _payrollClient;
 
-    public UsersController(IAdminServiceClient adminServiceClient)
+    public UsersController(IAdminServiceClient adminServiceClient
+        , IPayrollClient payrollClient)
     {
         _adminServiceClient = adminServiceClient;
+        _payrollClient = payrollClient;
     }
 
     [HttpGet]
@@ -39,7 +42,8 @@ public class UsersController : Controller
     [Route("AddUserToTenant", Name = "AddUserToTenant")]
     public IActionResult AddUserToTenant(string tenantId)
     {
-        return View(new AddUserRequest { TenantId = tenantId });
+        var roles = _payrollClient.GetRoles().GetAwaiter().GetResult();
+        return View(new AddUserRequest { TenantId = tenantId, Roles = roles.Select(e => e.Name).ToArray() });
     }
 
     // POST: Admin/Tenants/Edit/5
@@ -48,7 +52,7 @@ public class UsersController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("AddUserToTenant")]
-    public async Task<IActionResult> AddUserToTenant(Guid tenantid, [Bind("TenantId, UserEmail, ConfirmUserEmail")] AddUserRequest addUserRequest)
+    public async Task<IActionResult> AddUserToTenant(Guid tenantid, [Bind("TenantId, UserEmail, ConfirmUserEmail, Roles")] AddUserRequest addUserRequest)
     {
         if (string.Compare(tenantid.ToString(), addUserRequest.TenantId) != 0)
         {
@@ -65,7 +69,15 @@ public class UsersController : Controller
         {
             try
             {
-                await _adminServiceClient.InviteAsync(userTenantId, addUserRequest.UserEmail);
+                bool isAdmin = addUserRequest.Roles.Contains("Admin");
+                await _adminServiceClient.InviteAsync(userTenantId, addUserRequest.UserEmail, isAdmin ? "Admin" : "None");
+                await _payrollClient.AddUser(new PayrollUserModel()
+                {
+                    Name = addUserRequest.UserEmail,
+                    Email = addUserRequest.UserEmail,
+                    Roles = addUserRequest.Roles,
+                    //UserObjectId = userIdGuid,
+                });
             }
             catch (ApiException)
             {
@@ -85,15 +97,15 @@ public class UsersController : Controller
 
     [HttpGet]
     [Route("RemoveFromTenant", Name = "RemoveFromTenant")]
-    public IActionResult RemoveFromTenant(string tenantId, string userId, string displayname)
+    public IActionResult RemoveFromTenant(string tenantId, string userId, string displayname, string[] permissions)
     {
-        return View(new RemoveUserRequest { TenantId = tenantId, UserId = userId, DisplayName = displayname });
+        return View(new RemoveUserRequest { TenantId = tenantId, UserId = userId, DisplayName = displayname, Permissions = permissions });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("RemoveFromTenant")]
-    public async Task<IActionResult> RemoveFromTenant(Guid tenantid, [Bind("TenantId, UserId")] RemoveUserRequest removeUserRequest)
+    public async Task<IActionResult> RemoveFromTenant(Guid tenantid, [Bind("TenantId, UserId, Permissions")] RemoveUserRequest removeUserRequest)
     {
         if (string.Compare(tenantid.ToString(), removeUserRequest.TenantId) != 0)
         {
@@ -105,7 +117,8 @@ public class UsersController : Controller
             throw new ArgumentException($"Tenant id value is invalid '{removeUserRequest.TenantId}'. Value must be a guid. ");
         }
 
-        await _adminServiceClient.PermissionsDELETEAsync(tenantid, new Guid(removeUserRequest.UserId), new[] { TenantPermissionKind.Admin.ToString() });
+        var permissions = removeUserRequest.Permissions.Select(e => e.Split('.').Last()).ToList();
+        await _adminServiceClient.PermissionsDELETEAsync(tenantid, new Guid(removeUserRequest.UserId), permissions);
         return RedirectToAction(nameof(Index), new
         {
             area = "Admin",

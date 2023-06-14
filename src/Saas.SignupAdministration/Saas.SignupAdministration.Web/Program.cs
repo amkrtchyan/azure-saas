@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Saas.Identity.Extensions;
 using Saas.Identity.Helper;
 using Saas.Admin.Client;
+using Refit;
 
 // Hint: For debugging purposes: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/wiki/PII
 // IdentityModelEventSource.ShowPII = true;
@@ -121,6 +122,16 @@ builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>(httpClie
             ?? throw new NullReferenceException($"{nameof(AzureB2CAdminApiOptions)} Url cannot be null");
 
     httpClient.BaseAddress = new Uri(adminApiBaseUrl);
+});
+
+builder.Services.AddRefitClient<IPayrollClient>().ConfigureHttpClient(httpClient => {
+    string payrollApiBaseUrl = builder.Environment.IsDevelopment()
+        ? builder.Configuration.GetRequiredSection("payrollApi:baseUrl").Value
+            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the value for 'payrollApi:baseUrl' in appsettings.json.")
+        : builder.Configuration.GetRequiredSection(PayrollApiOptions.SectionName)?.Get<PayrollApiOptions>()?.BaseUrl
+            ?? throw new NullReferenceException($"{nameof(PayrollApiOptions)} Url cannot be null");
+
+    httpClient.BaseAddress = new Uri(payrollApiBaseUrl);
 });
 
 builder.Services.AddSession(options =>

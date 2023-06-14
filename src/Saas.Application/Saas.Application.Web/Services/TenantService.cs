@@ -30,4 +30,15 @@ public class TenantService : ITenantService
             Name = tenant?.Name ?? "Unknown" 
         };
     }
+
+    public async Task<List<TenantViewModel>> GetTenantsByUserIdAsync(Guid userIdentifier)
+    {
+        var tenants = await _adminServiceClient.TenantsAsync(userIdentifier);
+        return tenants.Select(e => new TenantViewModel()
+        {
+            Id = e.Id,
+            Name = e.Name,
+            Route = e.Route,
+        }).ToList();
+    }
 }

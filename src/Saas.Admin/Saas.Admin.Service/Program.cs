@@ -74,6 +74,7 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, SaasPermissionAuthor
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 
 builder.Services.AddHttpClient<IPermissionsServiceClient, PermissionsServiceClient>()
     .ConfigureHttpClient((serviceProvider, client) =>

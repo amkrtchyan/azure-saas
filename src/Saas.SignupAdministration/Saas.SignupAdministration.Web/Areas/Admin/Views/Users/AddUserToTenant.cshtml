@@ -1,4 +1,5 @@
-﻿@model Saas.SignupAdministration.Web.Areas.Admin.Data.AddUserRequest
+﻿@using Saas.Identity.Authorization.Model.Kind;
+@model Saas.SignupAdministration.Web.Areas.Admin.Data.AddUserRequest
 
 @{
     ViewData["Title"] = "Add User To Tenant";
@@ -25,6 +26,15 @@
                 <input asp-for="ConfirmUserEmail" class="form-control" />
                 <span asp-validation-for="ConfirmUserEmail" class="text-danger"></span>
             </div>
+            <div>
+                @foreach (var p in Model.Roles)
+                {
+                    <input name="roles" type="checkbox" value="@p" /> @p
+
+                    <br />
+                }
+            </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -368,6 +368,7 @@ public class TenantsController : ControllerBase
     /// </summary>
     /// <param name="tenantId"></param>
     /// <param name="userEmail"></param>
+    /// <param name="permission"></param>
     /// <returns></returns>
     [HttpPost("{tenantId}/invite")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -375,13 +376,13 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Admin, "tenantId")]
-    public async Task<IActionResult> InviteUserToTenant(Guid tenantId, string userEmail)
+    public async Task<IActionResult> InviteUserToTenant(Guid tenantId, string userEmail, string permission)
     {
         await _permissionsServiceClient.AddUserPermissionsToTenantByEmailAsync(
-            tenantId, 
-            userEmail, 
-            new string[] { TenantPermissionKind.Admin.ToString() });
-        
+            tenantId,
+            userEmail,
+            new string[] { permission ?? TenantPermissionKind.None.ToString() });
+
         return NoContent();
     }
 

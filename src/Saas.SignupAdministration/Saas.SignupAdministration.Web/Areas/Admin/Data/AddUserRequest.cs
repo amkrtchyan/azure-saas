@@ -5,4 +5,5 @@ public record AddUserRequest
     public string TenantId { get; init; } = null!;
     public string UserEmail { get; init; } = null!;
     public string ConfirmUserEmail { get; init; } = null!;
+    public string[] Roles { get; init; } = null!;
 }

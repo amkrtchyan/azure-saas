@@ -373,3 +373,8 @@ src/policy/appsettings.json
 
 #devcontainer
 .devcontainer/*
+/src/Saas.Admin/Saas.Admin.Service/Properties/ServiceDependencies/local
+/src/Saas.Application/Saas.Application.Web/Properties/ServiceDependencies/local
+/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1/Properties/ServiceDependencies/local
+/src/Saas.Identity/Saas.Permissions/Saas.Permissions.Service_v1.1/Properties
+/src/Saas.Application/Saas.Application.Web/Properties

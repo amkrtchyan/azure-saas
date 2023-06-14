@@ -35,7 +35,7 @@
                 <td>
                     @Html.ActionLink("Edit", "Edit", new {area = "Admin" } ) |
                     @Html.ActionLink("Details", "Details", new { area = "Admin" }) |
-                    @Html.ActionLink("Delete", "RemoveFromTenant", new { area = "Admin", controller="users", tenantid=@ViewData["tenantid"], userid=item.UserId, displayname=item.DisplayName })
+                    @Html.ActionLink("Delete", "RemoveFromTenant", new { area = "Admin", controller="users", tenantid=@ViewData["tenantid"], userid=item.UserId, displayname=item.DisplayName, permissions=item.Permissions })
                 </td>
             </tr>
         }

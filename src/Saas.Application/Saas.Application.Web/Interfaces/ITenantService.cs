@@ -4,5 +4,6 @@ namespace Saas.Application.Web.Interfaces
     public interface ITenantService
     {
         public Task<TenantViewModel> GetTenantInfoByRouteAsync(string userIdentifier);
+        public Task<List<TenantViewModel>> GetTenantsByUserIdAsync(Guid userIdentifier);
     }
 }

@@ -11,9 +11,11 @@ public class IndexModel : PageModel
     private readonly ITenantService _tenantService;
     private readonly IApplicationUser _applicationUser;
     public TenantViewModel? tenantData;
+    public List<TenantViewModel>? availableTenantsData;
     private string activeRoute = string.Empty;
 
-    public bool DisplayTenantInfo => _applicationUser is not null && !string.IsNullOrWhiteSpace(activeRoute);
+    public bool DisplayTenantInfo => _applicationUser is not null && !string.IsNullOrEmpty(activeRoute);
+    public bool Authenticated => User.Identity?.IsAuthenticated ?? false;
 
     public IndexModel(ILogger<IndexModel> logger, ITenantService tenantService, IApplicationUser applicationUser)
     {
@@ -36,6 +38,10 @@ public class IndexModel : PageModel
             {
 
             }            
+        }
+        else
+        {
+            availableTenantsData = await _tenantService.GetTenantsByUserIdAsync(_applicationUser.NameIdentifier);
         }
 
         return Page();
