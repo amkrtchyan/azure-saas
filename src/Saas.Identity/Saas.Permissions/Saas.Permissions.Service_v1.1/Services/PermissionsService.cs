@@ -119,7 +119,7 @@ public class PermissionsService : IPermissionsService
         return;
     }
 
-    public async Task AddUserPermissionsToTenantByEmailAsync(Guid tenantId, string userEmail, string[] permissions)
+    public async Task<User> AddUserPermissionsToTenantByEmailAsync(Guid tenantId, string userEmail, string[] permissions)
     {
         _logger.LogDebug($"User permissions where requested to be added to {userEmail} on {tenantId}");
         
@@ -144,6 +144,8 @@ public class PermissionsService : IPermissionsService
             });
 
         await _permissionsContext.SaveChangesAsync();
+
+        return user;
     }
 
     public async Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, Guid userId, string[] permissions)

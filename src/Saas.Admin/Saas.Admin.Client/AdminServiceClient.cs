@@ -121,12 +121,12 @@ namespace Saas.Admin.Client
 
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task InviteAsync(System.Guid tenantId, string userEmail, string permission);
+        System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1168,7 +1168,7 @@ namespace Saas.Admin.Client
 
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task InviteAsync(System.Guid tenantId, string userEmail, string permission)
+        public virtual System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission)
         {
             return InviteAsync(tenantId, userEmail, permission, System.Threading.CancellationToken.None);
         }
@@ -1176,7 +1176,7 @@ namespace Saas.Admin.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Threading.CancellationToken cancellationToken)
         {
             if (tenantId == null)
                 throw new System.ArgumentNullException("tenantId");
@@ -1224,9 +1224,14 @@ namespace Saas.Admin.Client
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 204)
+                        if (status_ == 200)
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<UserDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
                         }
                         else
                         if (status_ == 401)

@@ -52,7 +52,7 @@ public class UsersController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("AddUserToTenant")]
-    public async Task<IActionResult> AddUserToTenant(Guid tenantid, [Bind("TenantId, UserEmail, ConfirmUserEmail, Roles")] AddUserRequest addUserRequest)
+    public async Task<IActionResult> AddUserToTenant(Guid tenantid, [Bind("TenantId, UserEmail, ConfirmUserEmail, Roles, IsTenantAdmin")] AddUserRequest addUserRequest)
     {
         if (string.Compare(tenantid.ToString(), addUserRequest.TenantId) != 0)
         {
@@ -69,14 +69,15 @@ public class UsersController : Controller
         {
             try
             {
-                bool isAdmin = addUserRequest.Roles.Contains("Admin");
-                await _adminServiceClient.InviteAsync(userTenantId, addUserRequest.UserEmail, isAdmin ? "Admin" : "None");
+                var user = await _adminServiceClient.InviteAsync(userTenantId, addUserRequest.UserEmail
+                    , addUserRequest.IsTenantAdmin ? "Admin" : "None");
+
                 await _payrollClient.AddUser(new PayrollUserModel()
                 {
-                    Name = addUserRequest.UserEmail,
+                    Name = user.DisplayName,
+                    UserObjectId = user.UserId,
                     Email = addUserRequest.UserEmail,
                     Roles = addUserRequest.Roles,
-                    //UserObjectId = userIdGuid,
                 });
             }
             catch (ApiException)

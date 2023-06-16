@@ -1,4 +1,5 @@
 ﻿using Saas.Identity.Authorization.Model.Data;
+using Saas.Permissions.Service.Models;
 
 namespace Saas.Permissions.Service.Interfaces;
 
@@ -10,7 +11,7 @@ public interface IPermissionsService
     Task AddNewTenantAsync(Guid tenantId, Guid userId);
     Task AddUserPermissionsToTenantAsync(Guid tenantId, Guid userId, string[] permissions);
     Task AddUserPermissionsToUserAsync(Guid tenantId, Guid userId, string[] permissions);
-    Task AddUserPermissionsToTenantByEmailAsync(Guid tenantId, string userEmail, string[] permissions);
+    Task<User> AddUserPermissionsToTenantByEmailAsync(Guid tenantId, string userEmail, string[] permissions);
     Task RemoveUserPermissionsFromTenantAsync(Guid tenantId, Guid userId, string[] permissions);
     Task<ICollection<Guid>> GetTenantsForUserAsync(Guid userId);    
 }

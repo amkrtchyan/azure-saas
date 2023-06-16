@@ -89,12 +89,12 @@ namespace Saas.Permissions.Client
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body);
+        System.Threading.Tasks.Task<User> AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<User> AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -884,7 +884,7 @@ namespace Saas.Permissions.Client
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body)
+        public virtual System.Threading.Tasks.Task<User> AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body)
         {
             return AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, body, System.Threading.CancellationToken.None);
         }
@@ -892,7 +892,7 @@ namespace Saas.Permissions.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<User> AddUserPermissionsToTenantByEmailAsync(System.Guid? tenantId, string userEmail, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/Permissions/AddUserPermissionsToTenantByEmail?");
@@ -941,7 +941,19 @@ namespace Saas.Permissions.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            return;
+                            try
+                            {
+                                var objectResponse_ = await ReadObjectResponseAsync<User>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                                if (objectResponse_.Object == null)
+                                {
+                                    throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                }
+                                return objectResponse_.Object;
+                            }
+                            catch(Exception ex)
+                            {
+                                throw;
+                            }
                         }
                         else
                         if (status_ == 400)

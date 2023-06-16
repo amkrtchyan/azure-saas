@@ -165,8 +165,7 @@ public class PermissionsController : ControllerBase
     {
         try
         {
-            await _permissionsService.AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, permissions);
-            return Ok();
+            return Ok(await _permissionsService.AddUserPermissionsToTenantByEmailAsync(tenantId, userEmail, permissions));
         }
         catch (ItemAlreadyExistsException ex)
         {

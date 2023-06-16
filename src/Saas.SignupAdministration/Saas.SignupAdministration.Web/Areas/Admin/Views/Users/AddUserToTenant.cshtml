@@ -5,9 +5,8 @@
     ViewData["Title"] = "Add User To Tenant";
 }
 
-<h1>AddUserToTenant</h1>
+<h1>Add User To Tenant</h1>
 
-<h4>NewTenantRequest</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -27,23 +26,35 @@
                 <span asp-validation-for="ConfirmUserEmail" class="text-danger"></span>
             </div>
             <div>
-                @foreach (var p in Model.Roles)
-                {
-                    <input name="roles" type="checkbox" value="@p" /> @p
+                <fieldset>
+                    <legend>Payroll roles:</legend>
+                    @foreach (var p in Model.Roles)
+                    {
+                        <input name="Roles" type="radio" value="@p" /> @p
 
-                    <br />
-                }
+                        <br />
+                    }
+                </fieldset>
+            </div>
+            <p />
+            <p />
+            <div class="form-group">
+                <nobr>
+                    <input asp-for="UserEmail" name="IsTenantAdmin" type="checkbox" />
+                    <label asp-for="IsTenantAdmin" class="control-label">Tenant Admin</label>
+                </nobr>
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" /> |
+                @Html.ActionLink("Back to List", "Index", new { area = "Admin", controller="users", tenantid=Model.TenantId })
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    @Html.ActionLink("Back to List", "Index", new { area = "Admin", controller="users", tenantid=Model.TenantId })
+    
 </div>
 
 @section Scripts {
