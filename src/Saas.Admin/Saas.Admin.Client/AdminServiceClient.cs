@@ -121,12 +121,12 @@ namespace Saas.Admin.Client
 
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission);
+        System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Collections.Generic.IEnumerable<string> body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -1168,15 +1168,15 @@ namespace Saas.Admin.Client
 
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission)
+        public virtual System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Collections.Generic.IEnumerable<string> body)
         {
-            return InviteAsync(tenantId, userEmail, permission, System.Threading.CancellationToken.None);
+            return InviteAsync(tenantId, userEmail, permission, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<UserDTO> InviteAsync(System.Guid tenantId, string userEmail, string permission, System.Collections.Generic.IEnumerable<string> body, System.Threading.CancellationToken cancellationToken)
         {
             if (tenantId == null)
                 throw new System.ArgumentNullException("tenantId");
@@ -1200,7 +1200,10 @@ namespace Saas.Admin.Client
             {
                 using (var request_ = await CreateHttpRequestMessageAsync(cancellationToken).ConfigureAwait(false))
                 {
-                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    var json_ = System.Text.Json.JsonSerializer.Serialize(body, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     PrepareRequest(client_, request_, urlBuilder_);

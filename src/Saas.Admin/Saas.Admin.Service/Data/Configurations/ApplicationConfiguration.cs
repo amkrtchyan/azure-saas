@@ -1,4 +1,5 @@
-﻿using Saas.Admin.Service.Data.Entities;
+﻿using Saas.Admin.Service.Data.Constants;
+using Saas.Admin.Service.Data.Entities;
 
 namespace Saas.Admin.Service.Data.Configuration;
 
@@ -6,8 +7,6 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<Application>
 {
     public void Configure(EntityTypeBuilder<Application> builder)
     {
-        builder.HasKey(t => t.Id);
-
         builder.Property(t => t.Name)
             .HasMaxLength(50)
             .IsUnicode(false)
@@ -31,13 +30,13 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<Application>
         {
             new Application()
             {
-                Id = 1,
+                Id = ApplicationContants.FinancialServicesApplicationId,
                 Name = "Financial services",
                 Url = "financial.topal.ch",
             },
             new Application()
             {
-                Id = 2,
+                Id = ApplicationContants.PayrollServicesApplicationId,
                 Name = "Payroll services",
                 Url = "payroll.topal.ch",
             },

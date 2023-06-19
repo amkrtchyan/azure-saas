@@ -1,4 +1,5 @@
-﻿using Saas.Admin.Service.Data.Entities;
+﻿using Saas.Admin.Service.Data.Constants;
+using Saas.Admin.Service.Data.Entities;
 
 namespace Saas.Admin.Service.Data.Configuration;
 
@@ -44,7 +45,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
                 Name = "Trial",
                 MaxUserNumber = 10,
                 MonthlyPayment = 0m,
-                ApplicationId = 1,
+                ApplicationId = ApplicationContants.FinancialServicesApplicationId,
             },
             new
             {
@@ -52,7 +53,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
                 Name = "Basic",
                 MaxUserNumber = 10,
                 MonthlyPayment = 100m,
-                ApplicationId = 1,
+                ApplicationId = ApplicationContants.FinancialServicesApplicationId,
             },
             new
             {
@@ -60,7 +61,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
                 Name = "Standard",
                 MaxUserNumber = 100,
                 MonthlyPayment = 1000m,
-                ApplicationId = 1,
+                ApplicationId = ApplicationContants.FinancialServicesApplicationId,
             },
             new
             {
@@ -68,7 +69,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
                 Name = "Premium",
                 MaxUserNumber = 10000,
                 MonthlyPayment = 10000m,
-                ApplicationId = 1,
+                ApplicationId = ApplicationContants.FinancialServicesApplicationId,
             },
             new
             {
@@ -76,7 +77,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
                 Name = "Trial",
                 MaxUserNumber = 10,
                 MonthlyPayment = 0m,
-                ApplicationId = 2,
+                ApplicationId = ApplicationContants.PayrollServicesApplicationId,
             },
             new
             {
@@ -84,7 +85,7 @@ public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>
                 Name = "Standard",
                 MaxUserNumber = 100,
                 MonthlyPayment = 1000m,
-                ApplicationId = 2,
+                ApplicationId = ApplicationContants.PayrollServicesApplicationId,
             }
         );
     }

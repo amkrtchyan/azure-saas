@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Saas.Admin.Service.Data;
 
@@ -11,9 +12,11 @@ using Saas.Admin.Service.Data;
 namespace Saas.Admin.Service.Migrations
 {
     [DbContext(typeof(TenantsContext))]
-    partial class TenantsContextModelSnapshot : ModelSnapshot
+    [Migration("20230619123729_ApplicationRolesAdded_1")]
+    partial class ApplicationRolesAdded_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,10 +28,6 @@ namespace Saas.Admin.Service.Migrations
 
             modelBuilder.Entity("Saas.Admin.Service.Data.Entities.Application", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -41,23 +40,7 @@ namespace Saas.Admin.Service.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(1024)");
 
-                    b.HasKey("Id");
-
                     b.ToTable("Applications");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("8924f18e-de16-4963-b596-d6ba22dc8d5a"),
-                            Name = "Financial services",
-                            Url = "financial.topal.ch"
-                        },
-                        new
-                        {
-                            Id = new Guid("8bf68f28-11dd-4fff-a88f-38c832812503"),
-                            Name = "Payroll services",
-                            Url = "payroll.topal.ch"
-                        });
                 });
 
             modelBuilder.Entity("Saas.Admin.Service.Data.Entities.Feature", b =>
@@ -99,9 +82,6 @@ namespace Saas.Admin.Service.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("MaxUserNumber")
                         .HasColumnType("int");
 
@@ -117,15 +97,12 @@ namespace Saas.Admin.Service.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationId");
-
                     b.ToTable("Subscriptions", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            ApplicationId = new Guid("8924f18e-de16-4963-b596-d6ba22dc8d5a"),
                             MaxUserNumber = 10,
                             MonthlyPayment = 0m,
                             Name = "Trial"
@@ -133,7 +110,6 @@ namespace Saas.Admin.Service.Migrations
                         new
                         {
                             Id = 2,
-                            ApplicationId = new Guid("8924f18e-de16-4963-b596-d6ba22dc8d5a"),
                             MaxUserNumber = 10,
                             MonthlyPayment = 100m,
                             Name = "Basic"
@@ -141,7 +117,6 @@ namespace Saas.Admin.Service.Migrations
                         new
                         {
                             Id = 3,
-                            ApplicationId = new Guid("8924f18e-de16-4963-b596-d6ba22dc8d5a"),
                             MaxUserNumber = 100,
                             MonthlyPayment = 1000m,
                             Name = "Standard"
@@ -149,7 +124,6 @@ namespace Saas.Admin.Service.Migrations
                         new
                         {
                             Id = 4,
-                            ApplicationId = new Guid("8924f18e-de16-4963-b596-d6ba22dc8d5a"),
                             MaxUserNumber = 10000,
                             MonthlyPayment = 10000m,
                             Name = "Premium"
@@ -157,7 +131,6 @@ namespace Saas.Admin.Service.Migrations
                         new
                         {
                             Id = 5,
-                            ApplicationId = new Guid("8bf68f28-11dd-4fff-a88f-38c832812503"),
                             MaxUserNumber = 10,
                             MonthlyPayment = 0m,
                             Name = "Trial"
@@ -165,7 +138,6 @@ namespace Saas.Admin.Service.Migrations
                         new
                         {
                             Id = 6,
-                            ApplicationId = new Guid("8bf68f28-11dd-4fff-a88f-38c832812503"),
                             MaxUserNumber = 100,
                             MonthlyPayment = 1000m,
                             Name = "Standard"
@@ -243,8 +215,6 @@ namespace Saas.Admin.Service.Migrations
                     b.HasKey("Id");
 
                     b.HasAlternateKey("TenantId", "ApplicationId", "Role");
-
-                    b.HasIndex("ApplicationId");
 
                     b.ToTable("TenantApplicationRoles", (string)null);
                 });
@@ -326,24 +296,6 @@ namespace Saas.Admin.Service.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Saas.Admin.Service.Data.Entities.Subscription", b =>
-                {
-                    b.HasOne("Saas.Admin.Service.Data.Entities.Application", null)
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Saas.Admin.Service.Data.Entities.TenantApplicationRole", b =>
-                {
-                    b.HasOne("Saas.Admin.Service.Data.Entities.Application", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Saas.Admin.Service.Data.Entities.TenantSubscription", b =>
                 {
                     b.HasOne("Saas.Admin.Service.Data.Entities.Subscription", "Subscription")
@@ -390,13 +342,6 @@ namespace Saas.Admin.Service.Migrations
                         .HasForeignKey("SubscriptionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Saas.Admin.Service.Data.Entities.Application", b =>
-                {
-                    b.Navigation("Roles");
-
-                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("Saas.Admin.Service.Data.Entities.Tenant", b =>

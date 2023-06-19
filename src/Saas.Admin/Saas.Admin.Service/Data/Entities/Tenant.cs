@@ -1,3 +1,5 @@
+using Saas.Admin.Service.Common.Enums;
+
 namespace Saas.Admin.Service.Data.Entities;
 
 public class Tenant
@@ -9,6 +11,7 @@ public class Tenant
     public int CategoryId { get; set; }
     public string CreatorEmail { get; set; } = string.Empty;
     public DateTime? CreatedTime { get; set; }
+    public TenantStatus Status { get; set; }
     public ICollection<TenantSubscription> Subscriptions { get; set; } = new List<TenantSubscription>();
     [Timestamp]
     public byte[]? ConcurrencyToken { get; set; }

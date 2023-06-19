@@ -12,6 +12,7 @@ public class TenantsContext : DbContext
 
     public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<Application> Applications => Set<Application>();
+    public DbSet<TenantUserRole> TenantUserRoles => Set<TenantUserRole>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,10 +1,12 @@
-﻿using Saas.Identity.Authorization.Attribute;
+﻿using MassTransit;
+using Saas.Identity.Authorization.Attribute;
 using Saas.Identity.Authorization.Model.Claim;
 using Saas.Identity.Authorization.Model.Data;
 using Saas.Identity.Authorization.Model.Kind;
 using Saas.Identity.Authorization.Requirement;
 using Saas.Permissions.Client;
 using System.Net.Mime;
+using Topal.Contracts;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -16,18 +18,21 @@ public class TenantsController : ControllerBase
     private readonly ITenantService _tenantService;
     private readonly IPermissionsServiceClient _permissionsServiceClient;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IPublishEndpoint _publishEndpoint;
     private readonly ILogger _logger;
 
     public TenantsController(
         ITenantService tenantService, 
         IPermissionsServiceClient permissionService,
         IHttpContextAccessor httpContextAccessor,
+        IPublishEndpoint publishEndpoint,
         ILogger<TenantsController> logger)
     {
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
         _tenantService = tenantService;
         _permissionsServiceClient = permissionService;
+        _publishEndpoint = publishEndpoint;
     }
 
     /// <summary>
@@ -369,6 +374,7 @@ public class TenantsController : ControllerBase
     /// <param name="tenantId"></param>
     /// <param name="userEmail"></param>
     /// <param name="permission"></param>
+    /// <param name="roles"></param>
     /// <returns></returns>
     [HttpPost("{tenantId}/invite")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -376,14 +382,22 @@ public class TenantsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Admin, "tenantId")]
-    public async Task<User> InviteUserToTenant(Guid tenantId, string userEmail, string permission)
+    public async Task<User> InviteUserToTenant(Guid tenantId, string userEmail, string permission, [FromBody] string[] roles)
     {
-        return await _permissionsServiceClient.AddUserPermissionsToTenantByEmailAsync(
+        var user = await _permissionsServiceClient.AddUserPermissionsToTenantByEmailAsync(
             tenantId,
             userEmail,
             new string[] { permission ?? TenantPermissionKind.None.ToString() });
 
-        //return NoContent();
+        await _publishEndpoint.Publish<ICreateUser>(new
+        {
+            UserObjectId = user.UserId,
+            Name = user.DisplayName,
+            Email = userEmail,
+            Roles = roles,
+        });
+
+        return user;
     }
 
     /// <summary>
@@ -403,6 +417,11 @@ public class TenantsController : ControllerBase
     public async Task<IActionResult> DeleteUserPermissions(Guid tenantId, Guid userId, [FromBody] string[] permissions)
     {
         await _permissionsServiceClient.RemoveUserPermissionsFromTenantAsync(tenantId, userId, permissions);
+        await _publishEndpoint.Publish<IDeleteUser>(new
+        {
+            UserObjectId = userId,
+        });
+
         return NoContent();
     }
 

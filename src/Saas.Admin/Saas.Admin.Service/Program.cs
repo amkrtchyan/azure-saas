@@ -1,4 +1,5 @@
 using Azure.Identity;
+using MassTransit;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Options;
 using Saas.Admin.Service.Data;
@@ -163,6 +164,17 @@ void InitializeDevEnvironment()
                 .ConfigureKeyVault(kv => kv.SetCredential(new ChainedTokenCredential(credential)))
             .Select(KeyFilter.Any, version)); // <-- Important: since we're using labels in our Azure App Configuration store
 
+    builder.Services.AddMassTransit(config =>
+    {
+        var settings = builder.Configuration.GetSection("RabbitMQ");
+        config.UsingRabbitMq((ctx, cfg) =>
+        {
+            cfg.Host(settings["host"]);
+        });
+
+        config.AddTransactionalEnlistmentBus();
+
+    });
     // Configuring Swagger.
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();

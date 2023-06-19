@@ -1,5 +1,4 @@
-﻿using Microsoft.Graph;
-using Saas.Admin.Client;
+﻿using Saas.Admin.Client;
 using Saas.Identity.Authorization.Model.Kind;
 using Saas.SignupAdministration.Web.Areas.Admin.Data;
 
@@ -69,16 +68,9 @@ public class UsersController : Controller
         {
             try
             {
+                var tenantPermission = addUserRequest.IsTenantAdmin ? "Admin" : "None";
                 var user = await _adminServiceClient.InviteAsync(userTenantId, addUserRequest.UserEmail
-                    , addUserRequest.IsTenantAdmin ? "Admin" : "None");
-
-                await _payrollClient.AddUser(new PayrollUserModel()
-                {
-                    Name = user.DisplayName,
-                    UserObjectId = user.UserId,
-                    Email = addUserRequest.UserEmail,
-                    Roles = addUserRequest.Roles,
-                });
+                    , tenantPermission, addUserRequest.Roles);
             }
             catch (ApiException)
             {
