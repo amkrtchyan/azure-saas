@@ -1,4 +1,4 @@
-﻿namespace Saas.Admin.Service.Data.Constants;
+﻿namespace Saas.Shared.Constants;
 
 public static class ApplicationContants
 {

@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Saas.Admin\Saas.Admin.Client\Saas.Admin.Client.csproj" />
+    <ProjectReference Include="..\..\Saas.Admin\Saas.Admin.Service\Saas.Admin.Service.csproj" />
     <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
     <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />
   </ItemGroup>

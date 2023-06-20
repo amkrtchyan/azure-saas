@@ -1,12 +1,12 @@
-﻿using MassTransit;
+﻿using System.Net.Mime;
+using MassTransit;
 using Saas.Identity.Authorization.Attribute;
 using Saas.Identity.Authorization.Model.Claim;
 using Saas.Identity.Authorization.Model.Data;
 using Saas.Identity.Authorization.Model.Kind;
 using Saas.Identity.Authorization.Requirement;
 using Saas.Permissions.Client;
-using System.Net.Mime;
-using Topal.Contracts;
+using Saas.Shared.Messages;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -101,7 +101,45 @@ public class TenantsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Problem retrieving tenant with ID {TeantntID}", tenantId);
+            _logger.LogWarning(ex, "Problem retrieving tenant with ID {TenantID}", tenantId);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Get a application roles by tenant ID
+    /// </summary>
+    /// <param name="tenantId">Guid representing the tenant</param>
+    /// <param name="applicationId">Guid representing the application</param>
+    /// <returns>Information about the application role</returns>
+    /// <remarks>
+    /// <para><b>Requires:</b> admin.tenant.read  or  {tenantID}.tenant.read</para>
+    /// <para>Will return details of a single tenant, if user has access.</para>
+    /// </remarks>
+    [HttpGet("{tenantId}/applications/{applicationId}/roles")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+    [SaasAuthorize<SaasTenantPermissionRequirement, TenantPermissionKind>(TenantPermissionKind.Read, routingRestrictionKeyName: "tenantId")]
+    public async Task<ActionResult<IEnumerable<string>>> GetApplicationRoles(Guid tenantId, Guid applicationId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("{User} requested tenant application({applicationId}) roles with ID {TenantID}", User?.Identity?.Name, applicationId, tenantId);
+        try
+        {
+            var applicationRoles = await _tenantService.GetApplicationRolesAsync(tenantId, applicationId, cancellationToken);
+
+            return Ok(applicationRoles);
+        }
+        catch (ItemNotFoundExcepton)
+        {
+            _logger.LogDebug("Was not able to find tenant with ID {TenantID}", tenantId);
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Problem retrieving tenant with ID {TenantID}", tenantId);
             throw;
         }
     }

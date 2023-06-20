@@ -123,4 +123,13 @@ public class TenantService : ITenantService
             throw;
         }
     }
+
+    public async Task<IEnumerable<string>> GetApplicationRolesAsync(Guid tenantId, Guid applicationId, CancellationToken cancellationToken)
+    {
+        return await _context.Applications
+            .SelectMany(e => e.Roles)
+            .Where(e => e.TenantId == tenantId && e.ApplicationId == applicationId)
+            .Select(e => e.Role)
+            .ToListAsync(cancellationToken);
+    }
 }

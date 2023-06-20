@@ -1,6 +1,9 @@
-﻿using Saas.Admin.Client;
+﻿using System.Threading;
+using Saas.Admin.Client;
 using Saas.Identity.Authorization.Model.Kind;
+using Saas.Shared.Constants;
 using Saas.SignupAdministration.Web.Areas.Admin.Data;
+using Saas.SignupAdministration.Web.Interfaces;
 
 namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 
@@ -12,13 +15,13 @@ namespace Saas.SignupAdministration.Web.Areas.Admin.Controllers;
 public class UsersController : Controller
 {
     private readonly IAdminServiceClient _adminServiceClient;
-    private readonly IPayrollClient _payrollClient;
+    private readonly IAdminService _adminService;
 
     public UsersController(IAdminServiceClient adminServiceClient
-        , IPayrollClient payrollClient)
+        , IAdminService adminService)
     {
         _adminServiceClient = adminServiceClient;
-        _payrollClient = payrollClient;
+        _adminService = adminService;
     }
 
     [HttpGet]
@@ -39,10 +42,12 @@ public class UsersController : Controller
 
     [HttpGet]
     [Route("AddUserToTenant", Name = "AddUserToTenant")]
-    public IActionResult AddUserToTenant(string tenantId)
+    public async Task<IActionResult> AddUserToTenant(string tenantId, CancellationToken cancellationToken)
     {
-        var roles = _payrollClient.GetRoles().GetAwaiter().GetResult();
-        return View(new AddUserRequest { TenantId = tenantId, Roles = roles.Select(e => e.Name).ToArray() });
+        Guid tenantGuid = Guid.Parse(tenantId);
+        var payrollApplicationId = ApplicationContants.PayrollServicesApplicationId;
+        var roles = await _adminService.GetApplicationRolesAsync(tenantGuid, payrollApplicationId, cancellationToken);
+        return View(new AddUserRequest { TenantId = tenantId, Roles = roles.Select(e => e).ToArray() });
     }
 
     // POST: Admin/Tenants/Edit/5

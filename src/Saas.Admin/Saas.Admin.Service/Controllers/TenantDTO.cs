@@ -1,4 +1,5 @@
-﻿using Saas.Admin.Service.Data.Entities;
+﻿using Saas.Admin.Service.Common.Enums;
+using Saas.Admin.Service.Data.Entities;
 
 namespace Saas.Admin.Service.Controllers;
 
@@ -11,6 +12,7 @@ public class TenantDTO
     {
         Name = string.Empty;
         Route = string.Empty;
+        Status = string.Empty;
         Version = string.Empty;
     }
 
@@ -22,6 +24,7 @@ public class TenantDTO
 
         Name = Guard.Argument(tenant.Name, nameof(tenant.Name)).NotEmpty();
         Route = Guard.Argument(tenant.Route, nameof(tenant.Route)).NotEmpty();
+        Status = tenant.Status.ToString();
         CreatorEmail = Guard.Argument(tenant.CreatorEmail, nameof(tenant.CreatorEmail)).NotEmpty();
         ProductTierId = tenant.ProductTierId;
         CategoryId = tenant.CategoryId;
@@ -38,6 +41,7 @@ public class TenantDTO
             Id = Id,
             Name = Name,
             Route = Route,
+            Status = Common.Enums.TenantStatus.Created,
             CreatorEmail = CreatorEmail,
             ProductTierId = ProductTierId,
             CategoryId = CategoryId,
@@ -52,6 +56,7 @@ public class TenantDTO
     {
         target.Name = Name;
         target.Route = Route;
+        target.Status = Enum.Parse<TenantStatus>(Status);
         target.CreatorEmail = CreatorEmail;
         target.CategoryId = CategoryId;
         target.ProductTierId = ProductTierId;
@@ -61,6 +66,7 @@ public class TenantDTO
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Route { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
     public int ProductTierId { get; set; }
     public int CategoryId { get; set; }
     public string CreatorEmail { get; set; } = string.Empty;

@@ -1,5 +1,5 @@
-﻿using Saas.Admin.Service.Data.Constants;
-using Saas.Admin.Service.Data.Entities;
+﻿using Saas.Admin.Service.Data.Entities;
+using Saas.Shared.Constants;
 
 namespace Saas.Admin.Service.Data.Configuration;
 

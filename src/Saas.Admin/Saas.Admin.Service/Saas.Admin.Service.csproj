@@ -40,7 +40,6 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\..\..\Topal\Repos\PayrollNextGen\contracts\Topal.Contracts\Topal.Contracts.csproj" />
 	  <ProjectReference Include="..\..\Saas.Identity\Saas.Permissions\Saas.Permissions.Client\Saas.Permissions.Client.csproj" />
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Identity\Saas.Identity.csproj" />
 	  <ProjectReference Include="..\..\Saas.Lib\Saas.Shared\Saas.Shared.csproj" />

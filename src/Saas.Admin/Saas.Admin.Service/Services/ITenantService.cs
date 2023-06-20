@@ -18,4 +18,5 @@ public interface ITenantService
     Task<TenantInfoDTO> GetTenantInfoByRouteAsync(string route);
     Task<bool> TenantExistsAsync(Guid tenantId);
     Task<bool> CheckPathExists(string path);
+    Task<IEnumerable<string>> GetApplicationRolesAsync(Guid tenantId, Guid applicationId, CancellationToken cancellationToken = default);
 }

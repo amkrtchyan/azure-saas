@@ -1,6 +1,7 @@
 using Azure.Identity;
 using Microsoft.Identity.Web.UI;
 using Saas.SignupAdministration.Web;
+using Saas.SignupAdministration.Web.Interfaces;
 using Saas.Application.Web;
 using System.Reflection;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
@@ -124,15 +125,18 @@ builder.Services.AddHttpClient<IAdminServiceClient, AdminServiceClient>(httpClie
     httpClient.BaseAddress = new Uri(adminApiBaseUrl);
 });
 
-builder.Services.AddRefitClient<IPayrollClient>().ConfigureHttpClient(httpClient => {
-    string payrollApiBaseUrl = builder.Environment.IsDevelopment()
-        ? builder.Configuration.GetRequiredSection("payrollApi:baseUrl").Value
-            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the value for 'payrollApi:baseUrl' in appsettings.json.")
+builder.Services.AddTransient<AuthorizationMessageHandler>();
+
+builder.Services.AddRefitClient<IAdminService>().ConfigureHttpClient(httpClient =>
+{
+    string baseUrl = builder.Environment.IsDevelopment()
+        ? builder.Configuration.GetRequiredSection("adminApi:baseUrl").Value
+            ?? throw new NullReferenceException("Environment is running in development mode. Please specify the value for 'adminApi:baseUrl' in appsettings.json.")
         : builder.Configuration.GetRequiredSection(PayrollApiOptions.SectionName)?.Get<PayrollApiOptions>()?.BaseUrl
             ?? throw new NullReferenceException($"{nameof(PayrollApiOptions)} Url cannot be null");
 
-    httpClient.BaseAddress = new Uri(payrollApiBaseUrl);
-});
+    httpClient.BaseAddress = new Uri(baseUrl);
+}).AddHttpMessageHandler<AuthorizationMessageHandler>();
 
 builder.Services.AddSession(options =>
 {

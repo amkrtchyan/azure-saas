@@ -8,6 +8,7 @@ public partial class TenantViewModel
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Route { get; set; }
+    public string Status { get; set; }
     public int ProductTierId { get; set; }
     [DisplayName("Service Plan")]
     public string ProductName { get; set; }
@@ -24,6 +25,7 @@ public partial class TenantViewModel
         CreatedTime = tenantDTO.CreatedTime.LocalDateTime;
         Name = tenantDTO.Name;
         Route = tenantDTO.Route;
+        Status = tenantDTO.Status;
         CreatorEmail = tenantDTO.CreatorEmail;
         ProductTierId = tenantDTO.ProductTierId;
         ProductName = products.ElementAtOrDefault(tenantDTO.ProductTierId - 1)?.Name ?? "Free";
